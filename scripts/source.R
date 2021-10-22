@@ -2,13 +2,14 @@
 
 ## Necessary libraries
 library(tidyverse)
-library(AER)
 library(haven)
 library(ggthemes)
 library(ftplottools)
-library(lubridate)
 library(lfe)
 library(stargazer)
+library(tidymodels)
+library(keras)
+
 ## Negate the %in% operator (for convenience)
 
 `%notin%` <- Negate(`%in%`)
