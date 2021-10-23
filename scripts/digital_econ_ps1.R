@@ -27,39 +27,67 @@ round(q1_model$coefficients*100, digits = 4)
 # Question 2 -----------
 ## value_of_collaboration = \beta l_distance + \alpha both_have_bitnet + \mu_{ij}
 
-t = q2_univ_innov %>% 
-  group_by(both_have_bitnet, instit1) %>% 
-  summarize(across(contains(c("auth", "dist", "both")), mean)) %>% 
-  arrange(instit1)
+## Q2 Model B -----
 
-view(t)
-
-q2_model = logistic_reg(engine = "glm")
-
-q2_model_fit = q2_model %>% 
-  fit.model_spec(coauthorship ~ l_distance + both_have_bitnet + totsoloauths, data = q2_univ_innov)
-  
-
-q2_model_fit %>% tidy()
+q2_model_b = q2_univ_innov %>% 
+  glm(formula = coauthorship ~ l_distance + both_have_bitnet + totsoloauths, family = "binomial")
 
 
-distances = tibble(l_distance = rep(seq(0, 9, 0.1),2),
-                   both_have_bitnet = c(rep(0, 91), rep(1,91)),
-                   totsoloauths = mean(q2_univ_innov$totsoloauths))
-
-pred_prob_of_coauthorship = predict(q2_model_fit, 
-                                    new_data = distances, 
-                                    type = "prob")
-
-distances %>% 
-  bind_cols(pred_prob_of_coauthorship) %>% 
+q2_univ_innov %>% 
+  mutate(pred_prob = predict(object = q2_model_b,
+                             type = "response")) %>% 
   mutate(both_have_bitnet = as_factor(
     ifelse(both_have_bitnet ==1, "yes", "no"))
-    ) %>% 
-  ggplot(aes(l_distance, .pred_1))+
+  ) %>% 
+  ggplot(aes(l_distance, pred_prob))+
   geom_smooth(aes(color = both_have_bitnet))+
   ft_theme()+
   scale_color_economist()+
   ylab("Predicted probability of coauthorship")+
+  xlab("Log of Distance")+
+  labs(col = "Both have Bitnet")
+
+## Sumarize the predicted probability of coauthorship between university i and j
+q2_univ_innov %>% 
+  mutate(pred_prob = predict(object = q2_model_b,
+                             type = "response")) %>% 
+  group_by(both_have_bitnet) %>%
+  summarize(across(contains('pred'), list(mean, sd, min, max))) %>% 
+  set_names(c("both_have_bitnet", "mean", "sd", "min", "max"))
+  
+q1_univ_innov %>% 
+  group_by(both_have_bitnet) %>% 
+  summarize(across(contains("auth"), mean))
+
+q2_model_c = q2_univ_innov %>% 
+  mutate(choose_coauthor_over_solo = ifelse(fraction_coauthored >= 0.50, 1, 0)) %>% 
+  felm(formula = log(allcoauths/(allcoauths + totsoloauths)) ~ l_distance + both_have_bitnet + totsoloauths | instit2)
+
+q2_model_c %>% tidy()# %>% stargazer("latex", out = "output/q2_model_c.text")
+
+## Probability of coauthorship is 0.1415 percentage points higher when both have bitnet
+
+
+## Question 3 ---------
+## The empirical counterpart is the mean fraction of coauthored papers
+
+q3_summary = q2_univ_innov %>% 
+  group_by(both_have_bitnet) %>% 
+  summarize(across(contains("fraction_coauthored"), list(mean, sd, max))) %>% 
+  setNames(., c("both_have_bitnet", "mean", "sd", "max")) # %>% stargazer(type = "latex", title = "Fraction Coauthored Summary Statistics", out = "output/q3_summary.tex")
+
+q3_summary
+
+## coauthorship rate vs log distance
+
+q2_univ_innov %>% 
+  mutate(both_have_bitnet = as_factor(
+  ifelse(both_have_bitnet ==1, "yes", "no"))
+) %>% 
+  ggplot(aes(l_distance, fraction_coauthored))+
+  geom_smooth(aes(color = both_have_bitnet))+
+  ft_theme()+
+  scale_color_economist()+
+  ylab("Likelihood of choosing coauthorship over soloauthorship")+
   xlab("Log of Distance")+
   labs(col = "Both have Bitnet")
