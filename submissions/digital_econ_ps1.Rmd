@@ -1,0 +1,256 @@
+---
+title: "Digital Economics PS1"
+author: "Mason Ross Hayes"
+institution: Toulouse School of Economics
+output: pdf_document
+---
+
+
+# Part 2
+
+## Question 1
+
+The treated group is German patent classes, and the control is French patents in the same class. We are told that "ways of mass producing indigo dyes were pioneered by German chemists in the early years of the 20th century" &mdash; maybe it is not right to assume that these groups are the same. German chemists or manufacturers could have some particular advantage in this domain that may even change over time differently than in France. 
+
+## Question 2 
+
+\begin{table}[!htbp] \centering 
+  \caption{Ten Year Patent Filings} 
+  \label{q1_table} 
+\begin{tabular}{@{\extracolsep{5pt}} cccccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & TWEA Passed & FR Mean & FR SD & DE Mean & DE SD \\ 
+\hline \\[-1.8ex] 
+1 & no & 0.024 & 0.179 & 0.122 & 0.702 \\ 
+2 & yes & 0.014 & 0.127 & 0.271 & 0.712 \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table} 
+
+After the TWEA law was passed, the mean number of French-filed patents went down compared to the pre-TWEA period. The mean number of German-filed patents actually increased. This is because all patents filed pre-1919 were now invalid in the US; we would expect German firms then to re-file different, updated patents post-1919 (when the war ended, and after which the TWEA would not apply to newly-filed patents).
+
+## Question 3
+\begin{table}[!htbp] \centering 
+  \caption{Linear Model (no FE)} 
+  \label{table3.1} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & Ten Year Count USA \\ 
+\hline \\[-1.8ex] 
+ twea\_passed & 0.301$^{***}$ \\ 
+  & (0.037) \\ 
+  & \\ 
+ treated\_group & $-$0.006 \\ 
+  & (0.028) \\ 
+  & \\ 
+ did & 0.121$^{**}$ \\ 
+  & (0.052) \\ 
+  & \\ 
+ Constant & 0.029 \\ 
+  & (0.020) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 2,793 \\ 
+R$^{2}$ & 0.067 \\ 
+Adjusted R$^{2}$ & 0.066 \\ 
+Residual Std. Error & 0.620 (df = 2789) \\ 
+F Statistic & 67.164$^{***}$ (df = 3; 2789) \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+
+
+---
+
+\begin{table}[!htbp] \centering 
+  \caption{Linear Model (FE)} 
+  \label{table3.2} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & Ten Year Count USA \\ 
+\hline \\[-1.8ex] 
+ did & 0.121$^{**}$ \\ 
+  & (0.049) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 2,793 \\ 
+R$^{2}$ & 0.287 \\ 
+Adjusted R$^{2}$ & 0.166 \\ 
+Residual Std. Error & 0.585 (df = 2387) \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+
+
+
+In Table 2, we find that the coefficient of treatment time (passing of TWEA) is not different from zero, but that that of the treated group (those class IDs where German firms/people ever filed patents), is positive and significant. The treated group covers 284 out of 399 class IDs (71.2%). So, compared to the 28.8% of class IDs not in the treated group, those in the treated group have a higher number of German patent filings. This is a mechanical finding as the treatment group necessarily has a higher number of German patents by definition.
+
+## Question 4
+
+This data and these results imply nothing about the effects of removing copyrights, as these are industrial or technical patents and not copyrights.
+
+These results seem to suggest that more patents were filed in the US post-1919, when the TWEA lost effect on newly-filed German patents but remained in effect on patents filed pre-1919. 
+
+On average, for treated class IDs, $0.121$ more patents were filed in the USA post-TWEA than were filed in the USA pre-TWEA. There is no evidence that the two groups were statistically different before the law was introduced. 
+
+## Question 5
+
+The effects for the 1920-1930 period are lower than for the 1930-1940 period:
+
+$$
+\hat Z = \dfrac{\hat \beta_{1920,y} - \hat \beta_{1930,y}}{\sqrt{SE(\hat \beta_{1920,y}^2) + SE(\hat \beta_{1930,y}^2)}} = -4.99
+$$
+
+where $\hat \beta_{year, y}$ indicates the coefficient for treated ($y = yes$) groups in $year$.
+
+\begin{table}[!htbp] \centering 
+  \caption{Treatment Effects by Year} 
+  \label{table5.1} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & Ten Year Count USA \\ 
+\hline \\[-1.8ex] 
+ treated\_group &  \\ 
+  &  \\ 
+  & \\ 
+ ten\_yr1880 & 0.030 \\ 
+  & (0.059) \\ 
+  & \\ 
+ ten\_yr1890 & $-$0.000 \\ 
+  & (0.059) \\ 
+  & \\ 
+ ten\_yr1900 & 0.005 \\ 
+  & (0.059) \\ 
+  & \\ 
+ ten\_yr1910 & 0.036 \\ 
+  & (0.059) \\ 
+  & \\ 
+ ten\_yr1920 & 0.107$^{*}$ \\ 
+  & (0.059) \\ 
+  & \\ 
+ ten\_yr1930 & 0.523$^{***}$ \\ 
+  & (0.059) \\ 
+  & \\ 
+ treated\_group:ten\_yr1880 & $-$0.021 \\ 
+  & (0.083) \\ 
+  & \\ 
+ treated\_group:ten\_yr1890 & $-$0.010 \\ 
+  & (0.083) \\ 
+  & \\ 
+ treated\_group:ten\_yr1900 & $-$0.0001 \\ 
+  & (0.083) \\ 
+  & \\ 
+ treated\_group:ten\_yr1910 & $-$0.021 \\ 
+  & (0.083) \\ 
+  & \\ 
+ treated\_group:ten\_yr1920 & 0.027 \\ 
+  & (0.083) \\ 
+  & \\ 
+ treated\_group:ten\_yr1930 & 0.195$^{**}$ \\ 
+  & (0.083) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 2,793 \\ 
+R$^{2}$ & 0.289 \\ 
+Adjusted R$^{2}$ & 0.166 \\ 
+Residual Std. Error & 0.585 (df = 2382) \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+
+The strongest effects take place in 1930; this is when there is the greatest increase in US-filed patents among both treated and non-treated groups, and with the largest difference for treated groups.
+
+## Question 6
+
+From the "placebo" DiD regressions in Tables 5 and 6, the DiD coefficient is not different from zero. In Table 5, I regress `Ten Year Count USA` using the presence of French-filed patents in a subclass as the treated group instead of German-filed patent presence.
+
+In Table 6, I show the coefficients from regressing `Ten Year Count FR` on the same treated group (German-filed patent presence in a subclass) as done initially. From their coefficients and standard errors, both estimates are neither economically nor statistically different from zero.
+
+\begin{table}[!htbp] \centering 
+  \caption{Placebo DiD 1} 
+  \label{model6.1_placebo} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & Ten Year Count USA \\ 
+\hline \\[-1.8ex] 
+ french\_presence & 0.004 \\ 
+  & (0.043) \\ 
+  & \\ 
+ twea\_passed & 0.350$^{***}$ \\ 
+  & (0.028) \\ 
+  & \\ 
+ placebo\_did\_french & 0.099 \\ 
+  & (0.081) \\ 
+  & \\ 
+ Constant & 0.026$^{*}$ \\ 
+  & (0.015) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 2,793 \\ 
+R$^{2}$ & 0.066 \\ 
+Adjusted R$^{2}$ & 0.065 \\ 
+Residual Std. Error & 0.620 (df = 2789) \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+
+
+\begin{table}[!htbp] \centering 
+  \caption{Placebo DiD 2} 
+  \label{model6.1_placebo} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & Ten Year Count FR \\ 
+\hline \\[-1.8ex] 
+ treated\_group & 0.022$^{***}$ \\ 
+  & (0.007) \\ 
+  & \\ 
+ twea\_passed & $-$0.002 \\ 
+  & (0.010) \\ 
+  & \\ 
+ did & $-$0.015 \\ 
+  & (0.014) \\ 
+  & \\ 
+ Constant & 0.012$^{**}$ \\ 
+  & (0.005) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 2,793 \\ 
+R$^{2}$ & 0.004 \\ 
+Adjusted R$^{2}$ & 0.003 \\ 
+Residual Std. Error & 0.166 (df = 2789) \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+
+\newpage
+
+## Question 7
+Test
+

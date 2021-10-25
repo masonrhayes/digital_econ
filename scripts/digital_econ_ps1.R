@@ -85,7 +85,7 @@ q2_univ_innov %>%
   ifelse(both_have_bitnet ==1, "yes", "no"))
 ) %>% 
   ggplot(aes(l_distance, fraction_coauthored))+
-  geom_smooth(aes(color = both_have_bitnet))+
+  geom_jitter(aes(color = both_have_bitnet))+
   ft_theme()+
   scale_color_economist()+
   ylab("Likelihood of choosing coauthorship over soloauthorship")+
