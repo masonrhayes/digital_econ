@@ -18,11 +18,7 @@ summary(q1_model)
 
 round(q1_model$coefficients*100, digits = 4)
 
-# Write model to latex
-
-# uncomment to write to tex -----
-# 
-### q1_model %>%  stargazer("latex", out = "output/q1_model.tex")
+summary(q1_model)
 
 # Question 2 -----------
 ## value_of_collaboration = \beta l_distance + \alpha both_have_bitnet + \mu_{ij}

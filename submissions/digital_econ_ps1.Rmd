@@ -4,31 +4,56 @@ author: "Mason Ross Hayes"
 institution: Toulouse School of Economics
 output: pdf_document
 ---
+```{r load-packages, include=FALSE}
+library(tidyverse)
+library(lfe)
+library(tidymodels)
+```
+# Part 1
+
+
+## Question 1
+
+```{r, echo = FALSE}
+q5_model %>% tidy() %>% kable()
+```
+
 
 
 # Part 2
 
 ## Question 1
 
-The treated group is German patent classes, and the control is French patents in the same class. We are told that "ways of mass producing indigo dyes were pioneered by German chemists in the early years of the 20th century" &mdash; maybe it is not right to assume that these groups are the same. German chemists or manufacturers could have some particular advantage in this domain that may even change over time differently than in France. 
+The treated group is patent classes where there exist some German-filed patents, and the control is the patent classes without German-filed patents. The treated group covers 284 out of 399 class IDs (71.2%). 
+
+
+We are told that "ways of mass producing indigo dyes were pioneered by German chemists in the early years of the 20th century" &mdash; maybe it is not right to assume that these groups are the same. German chemists or manufacturers could have some particular advantage in this domain that may even change over time differently than in the USA. Also, maybe the US specialized in different patent classes for a reason specific to some characteristics of the USA or of USA companies or individuals.
 
 ## Question 2 
 
+The treated group and control groups look relatively similar, with 159 patents filed in the control and 204 in the treated group. Before treatment, the treated and control group are closer to being equal. 
+
+
+After the TWEA law was passed, patent filings in both the treatment and the control group went up. And, this increased more in the treated group than in the control. 
+
+The number of German-filed patents also went up after the passing of the TWEA. This may be because all patents filed pre-1919 were now invalid in the US; we would expect German firms then to re-file different, updated patents post-1919 (when the war ended, and after which the TWEA would not apply to newly-filed patents).
+
 \begin{table}[!htbp] \centering 
-  \caption{Ten Year Patent Filings} 
-  \label{q1_table} 
-\begin{tabular}{@{\extracolsep{5pt}} cccccc} 
+  \caption{Ten Year Patent Filings, US and DE} 
+  \label{q2_table_b} 
+\begin{tabular}{@{\extracolsep{5pt}} ccccccccc} 
 \\[-1.8ex]\hline 
 \hline \\[-1.8ex] 
- & TWEA Passed & FR Mean & FR SD & DE Mean & DE SD \\ 
+ & TWEA Passed & Treated Group & Mean US & SD US & Count US & Mean DE & SD DE & Count DE \\ 
 \hline \\[-1.8ex] 
-1 & no & 0.024 & 0.179 & 0.122 & 0.702 \\ 
-2 & yes & 0.014 & 0.127 & 0.271 & 0.712 \\ 
+1 & 0 & 0 & 0.029 & 0.169 & 29 & 0 & 0 & 0 \\ 
+2 & 0 & 1 & 0.024 & 0.159 & 24 & 0.242 & 0.972 & 244 \\ 
+3 & 1 & 0 & 0.33 & 0.578 & 130 & 0 & 0 & 0 \\ 
+4 & 1 & 1 & 0.446 & 1.483 & 180 & 0.535 & 0.927 & 216 \\ 
 \hline \\[-1.8ex] 
 \end{tabular} 
-\end{table} 
+\end{table}
 
-After the TWEA law was passed, the mean number of French-filed patents went down compared to the pre-TWEA period. The mean number of German-filed patents actually increased. This is because all patents filed pre-1919 were now invalid in the US; we would expect German firms then to re-file different, updated patents post-1919 (when the war ended, and after which the TWEA would not apply to newly-filed patents).
 
 ## Question 3
 \begin{table}[!htbp] \centering 
@@ -66,7 +91,6 @@ F Statistic & 67.164$^{***}$ (df = 3; 2789) \\
 \end{table} 
 
 
----
 
 \begin{table}[!htbp] \centering 
   \caption{Linear Model (FE)} 
@@ -94,19 +118,22 @@ Residual Std. Error & 0.585 (df = 2387) \\
 
 
 
-In Table 2, we find that the coefficient of treatment time (passing of TWEA) is not different from zero, but that that of the treated group (those class IDs where German firms/people ever filed patents), is positive and significant. The treated group covers 284 out of 399 class IDs (71.2%). So, compared to the 28.8% of class IDs not in the treated group, those in the treated group have a higher number of German patent filings. This is a mechanical finding as the treatment group necessarily has a higher number of German patents by definition.
+In Table 2, we find that the coefficient of treated group is not different from zero, but that that of the treatment time (passing of TWEA), is positive and significant. This could just mean that over that period, patent filings in the US were on the rise. The DiD coefficient gives us more insight, indicating that over that same treatment period, patent filings increased more for treated firms compared to control. This is precisely the number we get by calculating it from Table 1: $0.446 - 0.330 - (0.024-0.029) = 0.121$. This coefficient is significant at the 5% level. 
+
+By adding `class_id` and `ten_yr` fixed effects, the results do not change. This is expected, since `treated_group` is an indicator function of `class_id` and `twea_passed` is an indicator function of `ten_yr`. 
+
 
 ## Question 4
 
 This data and these results imply nothing about the effects of removing copyrights, as these are industrial or technical patents and not copyrights.
 
-These results seem to suggest that more patents were filed in the US post-1919, when the TWEA lost effect on newly-filed German patents but remained in effect on patents filed pre-1919. 
+These results seem to suggest that more patents were filed in the US post-1919, when the TWEA lost effect on newly-filed German patents but remained in effect on patents filed pre-1919. More importantly, the results suggest that this increase in patent filings was higher for treated class IDs than for control IDs -- in patent classes were there were German-filed patents, the number of US-filed patents increased more over the same period of time. 
 
 On average, for treated class IDs, $0.121$ more patents were filed in the USA post-TWEA than were filed in the USA pre-TWEA. There is no evidence that the two groups were statistically different before the law was introduced. 
 
 ## Question 5
 
-The effects for the 1920-1930 period are lower than for the 1930-1940 period:
+From Table 4, I find the effects for the 1920-1930 period are lower than for the 1930-1940 period:
 
 $$
 \hat Z = \dfrac{\hat \beta_{1920,y} - \hat \beta_{1930,y}}{\sqrt{SE(\hat \beta_{1920,y}^2) + SE(\hat \beta_{1930,y}^2)}} = -4.99
@@ -252,5 +279,10 @@ Residual Std. Error & 0.166 (df = 2789) \\
 \newpage
 
 ## Question 7
-Test
+
+These results are probably not generalizable to patents more broadly. This forfeiture of patent rights was an unanticipated "random" event that happened in wartime. It is because of this pseudo-randomness and transience that we can extrapolate from it; but if countries were routinely ignoring each other's patent laws, then the effects would likely decay. 
+
+The results are probably more likely to generalize to older patents, those in certain sectors (biomedicine, manufacturing processes, STEM fields, and so on) than to more recent developments. It would make sense that opening up process-based patents would be more beneficial than some other more esoteric patents; with it, any firm could use (and improve upon) an existing patent, which could lead to more patents through some spillover effects.
+
+For more cutting-edge patents (for example, MRNA vaccine production), opening up patents wouldn't be as beneficial &mdash; at least in the short term &mdash; since few companies in the world could replicate the technical process even if they had the legal rights to do so.
 
