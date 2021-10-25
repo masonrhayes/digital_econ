@@ -20,6 +20,8 @@ round(q1_model$coefficients*100, digits = 4)
 
 summary(q1_model)
 
+q1_model %>% tidy()
+
 # Question 2 -----------
 ## value_of_collaboration = \beta l_distance + \alpha both_have_bitnet + \mu_{ij}
 
@@ -57,7 +59,7 @@ q1_univ_innov %>%
 
 q2_model_c = q2_univ_innov %>% 
   mutate(choose_coauthor_over_solo = ifelse(fraction_coauthored >= 0.50, 1, 0)) %>% 
-  felm(formula = log(allcoauths/(allcoauths + totsoloauths)) ~ l_distance + both_have_bitnet + totsoloauths | instit2)
+  felm(formula = fraction_coauthored ~ l_distance + both_have_bitnet + totsoloauths | instit2)
 
 q2_model_c %>% tidy()# %>% stargazer("latex", out = "output/q2_model_c.text")
 
@@ -87,3 +89,6 @@ q2_univ_innov %>%
   ylab("Likelihood of choosing coauthorship over soloauthorship")+
   xlab("Log of Distance")+
   labs(col = "Both have Bitnet")
+
+# question 4-------
+

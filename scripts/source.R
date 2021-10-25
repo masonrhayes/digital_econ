@@ -8,7 +8,6 @@ library(ftplottools)
 library(lfe)
 library(stargazer)
 library(tidymodels)
-library(keras)
 
 ## Negate the %in% operator (for convenience)
 

@@ -5,11 +5,11 @@
 q1_model %>%  stargazer(type = "latex", title = "Q1 Model" ,
                         out = "output/univ_innov/q1_model.tex",
                         label = "p1q1_model",
-                        digits = 3,
+                        digits = 5,
                         dep.var.labels = "Coauthorship")
 
 
-
+q2_model_c %>% tidy() 
 
 
 

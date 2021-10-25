@@ -4,19 +4,94 @@ author: "Mason Ross Hayes"
 institution: Toulouse School of Economics
 output: pdf_document
 ---
-```{r load-packages, include=FALSE}
-library(tidyverse)
-library(lfe)
-library(tidymodels)
+```{r, include = FALSE}
+setwd("C:/Users/mason/Documents/projects/m2s1/digital_econ")
 ```
+
 # Part 1
 
 
 ## Question 1
 
-```{r, echo = FALSE}
-q5_model %>% tidy() %>% kable()
-```
+I define `coauthorship` as `TRUE` if $allcoauths > 0$. When both institutions have access to Bitnet, they have a higher probability of coauthorship &mdash; however, the probability of coauthorship is always low, only around 0.223% on average.  
+
+\begin{table}[!htbp] \centering 
+  \caption{Q1 Model} 
+  \label{p1q1_model} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & Coauthorship \\ 
+\hline \\[-1.8ex] 
+ l\_distance & $-$0.00104$^{***}$ \\ 
+  & (0.00028) \\ 
+  & \\ 
+ both\_have\_bitnet & 0.00215$^{***}$ \\ 
+  & (0.00063) \\ 
+  & \\ 
+ totsoloauths & 0.00001$^{***}$ \\ 
+  & (0.000004) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 36,315 \\ 
+R$^{2}$ & 0.01269 \\ 
+Adjusted R$^{2}$ & 0.00527 \\ 
+Residual Std. Error & 0.04705 (df = 36043) \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+
+Here, $R^2 \approx 0.013$ for the full model. Choosing a 5% significant level, all coefficients are statistically significant. These results indicate that, on average, those universities which are 1% farther apart have a 0.001% lower probability to have a coauthored publication in the given year. In other words, universities which are 2x farther apart have a 10% lower probability of coauthorship.
+
+We are not really able here to identify any causal effect of Bitnet access; all we know is that university pairs that have Bitnet are more likely to have coauthored papers &mdash; this could, for example, mean that universities that coauthor more papers with one another are more likely to justify the purchase of Bitnet.
+
+## Question 1A
+
+Let's look at the probability of coauthorship as a function of $\log(distance)$ by running a logistic regression of `coauthorship` on the same variables as before and checking the predicted probabilities:
+
+![Probability of Coauthorship vs Log of Distance]("C:/Users/mason/Documents/projects/m2s1/digital_econ/graphics/prob_of_coauthorship_vs_log_distance.png")
+
+## Question 2
+
+The above model is not the same as considering the probability of researcher $i$ choosing to coauthor with researcher $j$; it is simply the probability that institution pair $i, j$ have at least one shared paper. 
+
+In this researcher-specific model, we need to consider that the researcher always has outside option of solo-authoring. This implies that all researchers which choose to solo-author have a utilty less than zero for coauthoring. 
+
+Value of collaboration is given by:
+
+$$
+v(c) = \beta \log(d) + \alpha b + \mu_{ij} + \varepsilon_{ij}
+$$
+
+An author chooses to coauthor a paper if it is more 'profitable' than the outside option of solo-authoring a paper, $v(c) \geq v(s) = 0$.
+
+So the probability of coauthoring is given by:
+
+$$
+\Pr(v(c) \geq 0) = \Pr(\beta \log(d) + \alpha b + \mu_{ij} + \varepsilon_{ij} \geq 0)
+$$
+
+We can write this as:
+
+$$
+\Pr(v(c) \geq 0) = \dfrac{\exp(\beta \log(d) + \alpha b + \mu_{ij} + \varepsilon_{ij})}{1 + \exp(\beta \log(d) + \alpha b + \mu_{ij} + \varepsilon_{ij})}
+$$
+
+For this model I calculate the `fraction_coauthored` which is equal to:
+
+$$
+fraction\_coauthored_{i,j} = \dfrac{allcoauths_{i,j}}{allcoauths_{i,j} + totsoloauths_i}
+$$
+![Fraction Coauthored vs Log of Distance]("C:/Users/mason/Documents/projects/m2s1/digital_econ/graphics/fraction_coauthored_vs_log_distance.png")
+
+
+## Question 4
+
+The `fraction_coauthored` as shown above is the observable empirical analogue of the probability that researcher $i$ chooses to collaborate with researcher $j$. 
 
 
 
