@@ -65,16 +65,17 @@ q2_model_c %>% tidy()# %>% stargazer("latex", out = "output/q2_model_c.text")
 
 ## Probability of coauthorship is 0.1415 percentage points higher when both have bitnet
 
-
 ## Question 3 ---------
 ## The empirical counterpart is the mean fraction of coauthored papers
 
-q3_summary = q2_univ_innov %>% 
+q3_table = q2_univ_innov %>% 
   group_by(both_have_bitnet) %>% 
-  summarize(across(contains("fraction_coauthored"), list(mean, sd, max))) %>% 
-  setNames(., c("both_have_bitnet", "mean", "sd", "max")) # %>% stargazer(type = "latex", title = "Fraction Coauthored Summary Statistics", out = "output/q3_summary.tex")
+  summarize(mean = mean(fraction_coauthored),
+            sd = sd(fraction_coauthored),
+            max = max(fraction_coauthored),
+            n = n())
 
-q3_summary
+q3_table
 
 ## coauthorship rate vs log distance
 

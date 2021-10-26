@@ -16,8 +16,21 @@ q2_model_c %>% tidy()
 
 
 
+# Question 3
 
-
+q3_summary %>% stargazer(summary = FALSE,
+                       type = "latex",
+                       title = "Fraction Coauthored",
+                       out = "output/univ_innov/q3_table.tex",
+                       label = "q3_summary",
+                       digits = 5)
+# Question 4
+# 
+q4_model %>% stargazer(type = "latex",
+                       title = "Log Linear Model with Institution FE",
+                       out = "output/univ_innov/q4_table.tex",
+                       label = "q4_table",
+                       digits = 4)
 
 
 

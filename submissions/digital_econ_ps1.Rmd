@@ -86,12 +86,88 @@ For this model I calculate the `fraction_coauthored` which is equal to:
 $$
 fraction\_coauthored_{i,j} = \dfrac{allcoauths_{i,j}}{allcoauths_{i,j} + totsoloauths_i}
 $$
-![Fraction Coauthored vs Log of Distance]("C:/Users/mason/Documents/projects/m2s1/digital_econ/graphics/fraction_coauthored_vs_log_distance.png")
 
+
+
+## Question 3
+
+The `fraction_coauthored` as shown above is the observable empirical analogue of the probability that researcher $i$ chooses to collaborate with researcher $j$. 
+
+\begin{table}[!htbp] \centering 
+  \caption{Fraction Coauthored} 
+  \label{q3_summary} 
+\begin{tabular}{@{\extracolsep{5pt}} ccccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & both\_have\_bitnet & mean & sd & max \\ 
+\hline \\[-1.8ex] 
+1 & 0 & 7.92e-06 & 0.000463 & 0.040 \\ 
+2 & 1 & 0.00152 & 0.0298 & 0.881 \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table} 
+
+
+![Fraction Coauthored vs Log of Distance]("C:/Users/mason/Documents/projects/m2s1/digital_econ/graphics/fraction_coauthored_vs_log_distance.png")
 
 ## Question 4
 
-The `fraction_coauthored` as shown above is the observable empirical analogue of the probability that researcher $i$ chooses to collaborate with researcher $j$. 
+There are a couple different ways to estimate this model with OLS. For example, we could create a dummy variable `choose_coauthorship_over_soloauthorship` which is `TRUE` when `fraction_coauthored >= 0.50`. 
+
+However, as `fraction_coauthored` is already a decent empirical analogue, it's more straightforward to use this as the dependent variable and allows us to have more variation in the likelihood of choosing coauthorship. Running the regression with `instit2` fixed effects:
+
+```R
+univ_innov %>% 
+  felm(formula = fraction_coauthored ~ l_distance + both_have_bitnet 
+  + totsoloauths | instit2)
+```
+
+Alternatively, incrementing `allcoauths` and `totsoloauths` by 1, we can calculate the `log_fraction_coauthored` and run:
+
+
+```R
+univ_innov %>% 
+  felm(formula = log_fraction_coauthored ~ l_distance + both_have_bitnet
+  + totsoloauths | instit2)
+```
+
+Considering the second log specification, we have:
+
+\begin{table}[!htbp] \centering 
+  \caption{Log Linear Model with Institution FE} 
+  \label{q4_table} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & log\_fraction\_coauthored \\ 
+\hline \\[-1.8ex] 
+ l\_distance & $-$0.0060$^{***}$ \\ 
+  & (0.0013) \\ 
+  & \\ 
+ both\_have\_bitnet & 0.0152$^{***}$ \\ 
+  & (0.0030) \\ 
+  & \\ 
+ totsoloauths & $-$0.0046$^{***}$ \\ 
+  & (0.00002) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 36,315 \\ 
+R$^{2}$ & 0.7026 \\ 
+Adjusted R$^{2}$ & 0.7004 \\ 
+Residual Std. Error & 0.2192 (df = 36043) \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table}
+
+
+
+## Question 5
+
+
 
 
 
@@ -193,9 +269,9 @@ Residual Std. Error & 0.585 (df = 2387) \\
 
 
 
-In Table 2, we find that the coefficient of treated group is not different from zero, but that that of the treatment time (passing of TWEA), is positive and significant. This could just mean that over that period, patent filings in the US were on the rise. The DiD coefficient gives us more insight, indicating that over that same treatment period, patent filings increased more for treated firms compared to control. This is precisely the number we get by calculating it from Table 1: $0.446 - 0.330 - (0.024-0.029) = 0.121$. This coefficient is significant at the 5% level. 
+In Table 4, we find that the coefficient of treated group is not different from zero, but that that of the treatment time (passing of TWEA), is positive and significant. This could just mean that over that period, patent filings in the US were on the rise. The DiD coefficient gives us more insight, indicating that over that same treatment period, patent filings increased more for treated firms compared to control. This is precisely the number we get by calculating it from Table 3: $0.446 - 0.330 - (0.024-0.029) = 0.121$. This coefficient is significant at the 5% level. 
 
-By adding `class_id` and `ten_yr` fixed effects, the results do not change. This is expected, since `treated_group` is an indicator function of `class_id` and `twea_passed` is an indicator function of `ten_yr`. 
+By adding `class_id` and `ten_yr` fixed effects, the results do not change. This is expected, since `treated_group` is an indicator function of `class_id` and `twea_passed` is an indicator function of `ten_yr`; they are collinear. 
 
 
 ## Question 4
