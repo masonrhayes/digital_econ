@@ -57,11 +57,7 @@ q1_univ_innov %>%
   group_by(both_have_bitnet) %>% 
   summarize(across(contains("auth"), mean))
 
-q2_model_c = q2_univ_innov %>% 
-  mutate(choose_coauthor_over_solo = ifelse(fraction_coauthored >= 0.50, 1, 0)) %>% 
-  felm(formula = fraction_coauthored ~ l_distance + both_have_bitnet + totsoloauths | instit2)
 
-q2_model_c %>% tidy()# %>% stargazer("latex", out = "output/q2_model_c.text")
 
 ## Probability of coauthorship is 0.1415 percentage points higher when both have bitnet
 
@@ -92,4 +88,40 @@ q2_univ_innov %>%
   labs(col = "Both have Bitnet")
 
 # question 4-------
+
+q4_model = q2_univ_innov %>% 
+  mutate(choose_coauthor_over_solo = ifelse(fraction_coauthored >= 0.50, 1, 0)) %>% 
+  mutate(log_fraction_coauthored = log(allcoauths/(allcoauths + totsoloauths))) %>% 
+  felm(formula = log_fraction_coauthored ~ l_distance + both_have_bitnet + totsoloauths | instit2)
+
+q4_model %>% summary()
+
+# question 6
+# 
+mean_totsoloauths = mean(q2_univ_innov$totsoloauths)
+distance_ab = 1
+distance_ac = 1000
+distance_bc = 1000
+mean_l_distance= mean(q2_univ_innov$l_distance)  
+
+ab_data = c(log(1),
+            1,
+            mean_totsoloauths)
+ac_data = c(log(1000),
+            1,
+              mean_totsoloauths)
+bc_data = c(log(1000),
+            1,
+            mean_totsoloauths)
+
+
+new_data = rbind(ab_data, ac_data, bc_data) %>% 
+  as.data.frame() %>% 
+  setNames(.,c("l_distance", "both_have_bitnet", "totsoloauths")) %>% 
+  tibble()
+
+new_data
+
+q4_model$coefficients * ab_data
+
 

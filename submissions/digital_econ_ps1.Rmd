@@ -167,9 +167,25 @@ Residual Std. Error & 0.2192 (df = 36043) \\
 
 ## Question 5
 
+The coefficient for `l_distance` is $-0.006$; this means that, all else equal, a 1% increase in distance implies a 0.006% drop in the likelihood that researcher $i$ chooses to coauthor a publication with researcher $j$ rather than soloauthor.
 
+The coefficient for `both_have_bitnet` is $0.0152$; if both institutions have Bitnet, the log of `fraction_coauthored` increases by 0.0152; the probability of coauthorship is multiplied by $\exp(0.0152)$, which corresponds to a 1.53% increase in the probability of coauthorship.
 
+## Question 6
 
+It would be a mistake to use this model to predict anything. The model is not useful for predicting and especially not at such distances; we have only 90 observations of university pairs one kilometer apart, only 1 out of 90 has more than 0 coauthored papers (university pair 132,171 which has 551 coauthored papers).
+
+Without any other information, expected probability of collaboration would be near zero with or without Bitnet. 
+
+Similarly, probability of coauthorship for a university pair at 1000 km is effectively zero. Only 81 out of 36315 observations &mdash; corresponding to *only 37 unique* institution pairs (out of 269) &mdash; have a higher than zero probability of collaboration. Of these, 90% have Bitnet. But of those institution pairs which both have Bitnet, the mean `fraction_coauthored` is 0.00151.
+
+We can say from this data that if two universities have a high fraction of coauthored papers, they most likely have Bitnet. We cannot infer the other way around. 
+
+## Question 7
+
+The presence of "coauthored publications" by itself may mean nothing in terms of innovation. What about the citation rates or general impact of those papers; or the discipline the papers focus on? To study innovation we are probably not interested in if a pair of universities coauthored a paper on history or philosophy. 
+
+It would also be useful to see the amount of time saved on coauthoring a paper &mdash; does Bitnet help researchers to save time, and therefore allow them more time to dedicate to writing and researcher with others? This could have a large impact on future innovation, for example, not only by encouraging collaboration but by enabling greater productivity.
 
 # Part 2
 
@@ -269,7 +285,7 @@ Residual Std. Error & 0.585 (df = 2387) \\
 
 
 
-In Table 4, we find that the coefficient of treated group is not different from zero, but that that of the treatment time (passing of TWEA), is positive and significant. This could just mean that over that period, patent filings in the US were on the rise. The DiD coefficient gives us more insight, indicating that over that same treatment period, patent filings increased more for treated firms compared to control. This is precisely the number we get by calculating it from Table 3: $0.446 - 0.330 - (0.024-0.029) = 0.121$. This coefficient is significant at the 5% level. 
+In Table 5, we find that the coefficient of treated group is not different from zero, but that that of the treatment time (passing of TWEA), is positive and significant. This could just mean that over that period, patent filings in the US were on the rise. The DiD coefficient gives us more insight, indicating that over that same treatment period, patent filings increased more for treated firms compared to control. This is precisely the number we get by calculating it from Table 4: $0.446 - 0.330 - (0.024-0.029) = 0.121$. This coefficient is significant at the 5% level. 
 
 By adding `class_id` and `ten_yr` fixed effects, the results do not change. This is expected, since `treated_group` is an indicator function of `class_id` and `twea_passed` is an indicator function of `ten_yr`; they are collinear. 
 
@@ -284,7 +300,7 @@ On average, for treated class IDs, $0.121$ more patents were filed in the USA po
 
 ## Question 5
 
-From Table 4, I find the effects for the 1920-1930 period are lower than for the 1930-1940 period:
+From Table 7, I find the effects for the 1920-1930 period are lower than for the 1930-1940 period:
 
 $$
 \hat Z = \dfrac{\hat \beta_{1920,y} - \hat \beta_{1930,y}}{\sqrt{SE(\hat \beta_{1920,y}^2) + SE(\hat \beta_{1930,y}^2)}} = -4.99
@@ -356,9 +372,9 @@ The strongest effects take place in 1930; this is when there is the greatest inc
 
 ## Question 6
 
-From the "placebo" DiD regressions in Tables 5 and 6, the DiD coefficient is not different from zero. In Table 5, I regress `Ten Year Count USA` using the presence of French-filed patents in a subclass as the treated group instead of German-filed patent presence.
+From the "placebo" DiD regressions in Tables 8 and 9, the DiD coefficient is not different from zero. In Table 8, I regress `Ten Year Count USA` using the presence of French-filed patents in a subclass as the treated group instead of German-filed patent presence.
 
-In Table 6, I show the coefficients from regressing `Ten Year Count FR` on the same treated group (German-filed patent presence in a subclass) as done initially. From their coefficients and standard errors, both estimates are neither economically nor statistically different from zero.
+In Table 9, I show the coefficients from regressing `Ten Year Count FR` on the same treated group (German-filed patent presence in a subclass) as done initially. From their coefficients and standard errors, both estimates are neither economically nor statistically different from zero.
 
 \begin{table}[!htbp] \centering 
   \caption{Placebo DiD 1} 
